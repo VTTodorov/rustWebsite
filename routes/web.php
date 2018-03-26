@@ -18,3 +18,5 @@ Route::get('/', 'Website@index');
 
 Route::get('/steam', 'AuthController@handle');
 Route::get('/signin', 'AuthController@redirectToSteam');
+
+Route::get('/payments/card', 'PaypalPaymentController@paywithCreditCard');
