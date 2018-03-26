@@ -157,6 +157,10 @@
             color: white;
         }
 
+        .links > a:hover {
+            color: rgb(66, 103, 178);
+        }
+
     </style>
 </head>
 
