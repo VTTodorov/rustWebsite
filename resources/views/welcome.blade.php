@@ -28,6 +28,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-panelsnap@0.16.0/jquery.panelSnap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
     <script src="js/welcome.blade.js"></script>
+    <script src="js/particles.js"></script>
 
     <!-- Styles -->
     <style>
@@ -73,7 +74,7 @@
             margin-top: 10vh;
             overflow-y: : scroll;
             overflow-x: hidden;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0.6);
         }
 
         .title {
@@ -174,12 +175,45 @@
             color: rgb(66, 103, 178);
         }
 
+        #particles-js{
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 200vh;
+            width: 200vw;
+            transition: top 2.5s;
+        }
+
+        .connect{
+            height: 60%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .connect-link{
+            background-color: #545454;
+            color: white;
+            font-weight: bold;
+            padding: 10px 22px;
+            border-radius: 2px;
+            box-shadow: 0 0 0 2px #fafafa inset !important;
+        }
+
+        .connect-link:hover{
+            box-shadow: 0 0 0 2px #ff5144 inset !important;
+            color: #ff695e !important;
+            text-decoration: none;
+        }
+
     </style>
 </head>
 
 <body class="full-height">
-    <video src="/bg.mp4" autoplay loop poster="posterimage.jpg" style="position: fixed; right: 0; bottom: 0;min-width: 100vw; min-height: 100vh; z-index:0; margin-top: 10vh;"></video>
-
+    <video src="/bg.mp4" autoplay loop poster="posterimage.jpg" style="position: fixed; right: 0; bottom: 0;min-width: 100vw; min-height: 100vh; z-index:0; margin-top: 10vh;">
+    </video>
+    <div id="particles-js">
+    </div>
     <div class="navigation">
         <div class="pull-left title">
             Kompot Rust
@@ -193,32 +227,35 @@
         </div>
     </div>
     <div class="content">
-        <section id="server_info">
-            <h1 class="title">Welcome to Kompot Rust</h1>
-            <div>
-                <label>Status:</label>
-                {{$server_status}}
-            </div>
-            <div>
-            <label>Players: </label>{{$server_players}}/{{$server_max_players}}
-                <div class="progress">
-                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$server_player_percentage}}%">
+            <section id="server_info">
+                <h1 class="title">Welcome to {{$server_name}}</h1>
+                <div>
+                    <label>Status:</label>
+                    {{$server_status}}
+                </div>
+                <div>
+                <label>Players: </label>{{$server_players}}/{{$server_max_players}}
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$server_player_percentage}}%">
 
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-        <section id="social_info">
-            <h1 class="title">Follow Us</h1>
-            <div class="links">
-                <a href="" target="_blank" class="btn btn-outline-light"><i class="fa fa-facebook fa-fw fa-2x" aria-hidden="true"></i></a>
-                <a href="" target="_blank" class="btn btn-outline-light"><i class="fa fa-vk fa-fw fa-2x" aria-hidden="true"></i></a>
-                <a href="" target="_blank" class="btn btn-outline-light"><i class="fa fa-twitter fa-fw fa-2x" aria-hidden="true"></i></a>
-            </div>
-        </section>
+                <div class="connect">
+                    <a class="connect-link" href="steam://connect/kompotrust.eu:28015">PLAY NOW</a>
+                </div>
+            </section>
+            <section id="social_info">
+                <h1 class="title">Follow Us</h1>
+                <div class="links">
+                    <a href="" target="_blank" class="btn btn-outline-light"><i class="fa fa-facebook fa-fw fa-2x" aria-hidden="true"></i></a>
+                    <a href="" target="_blank" class="btn btn-outline-light"><i class="fa fa-vk fa-fw fa-2x" aria-hidden="true"></i></a>
+                    <a href="" target="_blank" class="btn btn-outline-light"><i class="fa fa-twitter fa-fw fa-2x" aria-hidden="true"></i></a>
+                </div>
+            </section>
     </div>
 
-    </video>
+    <!-- </video> -->
     <div class="footer">
         <p class="pull-rigth">&copy; 2018 KompotRust.eu<p>
     </div>
