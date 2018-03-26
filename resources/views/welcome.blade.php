@@ -106,6 +106,10 @@
             position: fixed;
             bottom: 0;
             left: 0;
+            line-height: 10vh;
+            color: white;
+            font-size: 20px;
+            padding-right: 15px;
         }
 
         .pull-left{
@@ -175,7 +179,6 @@
             @if (!Auth::check())
             <a href="/signin"><div type="button" id=login  class="login-btn" style=""></div></a>
             @else
-
             <p class="username"><img src="{{$user->avatar}}" class="avatar">{{$user->username}}</p>
             @endif
         </div>
@@ -208,7 +211,7 @@
 
     </video>
     <div class="footer">
-
+        <p class="pull-rigth">&copy; 2018 KompotRust.eu<p>
     </div>
 </body>
 
