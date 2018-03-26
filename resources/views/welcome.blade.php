@@ -12,8 +12,12 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
     <link href="https://api.rust-servers.info/embed.js?id=389">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/8f466ad9bd.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-panelsnap@0.16.0/jquery.panelSnap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+    <script src="js/welcome.blade.js"></script>
 
     <!-- Styles -->
     <style>
@@ -54,9 +58,11 @@
             width: 100vw;
             font-size: 2em;
             color: white;
-            height: 100vh;
+            height: 81vh;
             position: fixed;
             margin-top: 10vh;
+            overflow-y: : scroll;
+            overflow-x: hidden;
             background-color: rgba(0,0,0,0.5);
         }
 
@@ -134,6 +140,22 @@
             font-weight: bold;
         }
 
+        section{
+            height: 81vh;
+        }
+
+        .links{
+            height: 60vh;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .links > a {
+            font-size: 40px;
+            color: white;
+        }
+
     </style>
 </head>
 
@@ -154,19 +176,29 @@
         </div>
     </div>
     <div class="content">
-        <h1 class="title">Welcome to Kompot Rust</h1>
-        <div>
-            <label>Status:</label>
-            {{$server_status}}
-        </div>
-        <div>
-        <label>Players: </label>{{$server_players}}/{{$server_max_players}}
-            <div class="progress">
-                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$server_player_percentage}}%">
+        <section id="server_info">
+            <h1 class="title">Welcome to Kompot Rust</h1>
+            <div>
+                <label>Status:</label>
+                {{$server_status}}
+            </div>
+            <div>
+            <label>Players: </label>{{$server_players}}/{{$server_max_players}}
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$server_player_percentage}}%">
 
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
+        <section id="social_info">
+            <h1 class="title">Follow Us</h1>
+            <div class="links">
+                <a href="" target="_blank" class="btn btn-outline-light"><i class="fa fa-facebook fa-fw fa-2x" aria-hidden="true"></i></a>
+                <a href="" target="_blank" class="btn btn-outline-light"><i class="fa fa-vk fa-fw fa-2x" aria-hidden="true"></i></a>
+                <a href="" target="_blank" class="btn btn-outline-light"><i class="fa fa-twitter fa-fw fa-2x" aria-hidden="true"></i></a>
+            </div>
+        </section>
     </div>
 
     </video>
