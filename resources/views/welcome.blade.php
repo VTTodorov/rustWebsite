@@ -271,9 +271,9 @@
 
                     <input type="hidden" name="currency_code" value="USD">
 
-                    <input type="hidden" name="cancel_return" value="http://127.0.0.1/payments/cancel">
+                    <input type="hidden" name="cancel_return" value="http://kompotrust.eu/payments/cancel">
 
-                    <input type="hidden" name="return" value="http://127.0.0.1/payments/success">
+                    <input type="hidden" name="return" value="http://kompotrust.eu/payments/success">
 
                     <button  class="add-to-cart">Buy VIP1</button>
 
