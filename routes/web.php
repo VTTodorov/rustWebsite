@@ -19,4 +19,30 @@ Route::get('/', 'Website@index');
 Route::get('/steam', 'AuthController@handle');
 Route::get('/signin', 'AuthController@redirectToSteam');
 
-Route::get('/payments/card', 'PaypalPaymentController@paywithCreditCard');
+Route::get('/payments/success', 'Website@success');
+
+
+Route::get('/payments', function()
+{
+    return view('paypal');
+});
+//  A21AAFlJBJTns-Gyi8O28L9fZaFEzru_FQICB9EOb3r4wzd9SX6Ceasgx3XHxK_cq29RgzygFrUdwUCY3bCDYBOPbX1-egqMA
+//  curl -v https://api.sandbox.paypal.com/v1/payments/payment \
+//   -H "Content-Type: application/json" \
+//   -H "Authorization: Bearer A21AAFlJBJTns-Gyi8O28L9fZaFEzru_FQICB9EOb3r4wzd9SX6Ceasgx3XHxK_cq29RgzygFrUdwUCY3bCDYBOPbX1-egqMA" \
+//   -d '{
+//   "intent": "sale",
+//   "redirect_urls": {
+//     "return_url": "https://example.com/your_redirect_url.html",
+//     "cancel_url": "https://example.com/your_cancel_url.html"
+//   },
+//   "payer": {
+//     "payment_method": "paypal"
+//   },
+//   "transactions": [{
+//     "amount": {
+//       "total": "7.47",
+//       "currency": "USD"
+//     }
+//   }]
+// }'

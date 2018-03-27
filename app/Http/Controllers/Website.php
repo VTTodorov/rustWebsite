@@ -6,6 +6,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
+
 
 class Website extends BaseController
 {
@@ -25,5 +27,10 @@ class Website extends BaseController
         $user = Auth::user();
 
         return view('welcome', compact("server_players", "server_max_players", "server_status", "server_name", "server_player_percentage", "user"));
+    }
+
+    public function success(Request $request)
+    {
+        dd($request);
     }
 }

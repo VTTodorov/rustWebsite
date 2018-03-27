@@ -210,7 +210,7 @@
 </head>
 
 <body class="full-height">
-    <video src="/bg.mp4" autoplay loop poster="posterimage.jpg" style="position: fixed; right: 0; bottom: 0;min-width: 100vw; min-height: 100vh; z-index:0; margin-top: 10vh;">
+    <video src="/bg.mp4" autoplay loop style="position: fixed; right: 0; bottom: 0;min-width: 100vw; min-height: 100vh; z-index:0; margin-top: 10vh;">
     </video>
     <div id="particles-js">
     </div>
@@ -252,6 +252,32 @@
                     <a href="" target="_blank" class="btn btn-outline-light"><i class="fa fa-vk fa-fw fa-2x" aria-hidden="true"></i></a>
                     <a href="" target="_blank" class="btn btn-outline-light"><i class="fa fa-twitter fa-fw fa-2x" aria-hidden="true"></i></a>
                 </div>
+            </section>
+            <section id="vip_kits">
+                <h1 class="title">VIP kits</h1>
+                <form action='https://www.sandbox.paypal.com/cgi-bin/webscr' method="post" name="frmPayPal1">
+
+                    <input type="hidden" name="business" value="vttodorov94-facilitator@gmail.com">
+
+                    <input type="hidden" name="cmd" value="_xclick">
+
+                    <input type="hidden" name="item_name" value="VIP1">
+
+                    <input type="hidden" name="item_number" value="1">
+
+                    <input type="hidden" name="amount" value="5">
+
+                    <input type="hidden" name="no_shipping" value="1">
+
+                    <input type="hidden" name="currency_code" value="USD">
+
+                    <input type="hidden" name="cancel_return" value="http://127.0.0.1/payments/cancel">
+
+                    <input type="hidden" name="return" value="http://127.0.0.1/payments/success">
+
+                    <button  class="add-to-cart">Buy VIP1</button>
+
+                </form>
             </section>
     </div>
 
