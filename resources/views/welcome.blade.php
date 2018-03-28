@@ -78,7 +78,12 @@
         }
 
         .title {
-            font-size: 2.5em;
+            font-size: 1.5em;
+        }
+
+        .logo{
+            font-size: 4em;
+            font-weight: bold;
         }
 
         .links>a {
@@ -101,12 +106,19 @@
             background-color: black;
             color: white;
             display: flex;
-            justify-content: space-between;
             align-items: center;
             padding: 0px 5%;
             position: fixed;
             top: 0;
             left: 0;
+        }
+
+        .nav{
+            height: 10vh;
+            width: 100vw;
+            background-color: black;
+            position: fixed;
+
         }
 
         .footer{
@@ -157,6 +169,7 @@
 
         section{
             height: 81vh;
+            padding-top: 5vw;
         }
 
         .links{
@@ -206,6 +219,18 @@
             text-decoration: none;
         }
 
+        .col{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 10vh;
+        }
+
+        .breadcrumb{
+            background-color: transparent !important;
+            font-size: 1.5em;
+        }
+
     </style>
 </head>
 
@@ -214,18 +239,41 @@
     </video>
     <div id="particles-js">
     </div>
-    <div class="navigation">
-        <div class="pull-left title">
-            Kompot Rust
+    <header class="nav container">
+        <div class="row">
+           <div class="col col-md-6 col-sm-4 title logo">
+             {{$server_name}}
+           </div>
+           <div class="col col-md-2 col-sm-3">
+               <ol class="breadcrumb">
+                 <li><a href="#">Home</a></li>
+                 <li><a href="#">News</a></li>
+                 <li><a href="#">VIP Kits</a></li>
+                 <li><a href="#">Contact</a></li>
+               </ol>
+           </div>
+           <div class="col col-md-4 col-sm-5">
+               @if (!Auth::check())
+               <a href="/signin"><div type="button" id=login  class="login-btn" style=""></div></a>
+               @else
+               <p class="username"><img src="{{$user->avatar}}" class="avatar">{{$user->username}}</p>
+               @endif
+           </div>
+         </div>
+    </header>
+    <!-- <div class="navigation row">
+        <div class="pull-left title col col-md-3">
+
         </div>
-        <div class="pull-rigth">
-            @if (!Auth::check())
-            <a href="/signin"><div type="button" id=login  class="login-btn" style=""></div></a>
-            @else
-            <p class="username"><img src="{{$user->avatar}}" class="avatar">{{$user->username}}</p>
-            @endif
+        <div class="nav-menu col com-md-7">
+
         </div>
-    </div>
+        <div class="pull-rigth col com-md-2">
+
+
+
+        </div>
+    </div> -->
     <div class="content">
             <section id="server_info">
                 <h1 class="title">Welcome to {{$server_name}}</h1>
@@ -255,29 +303,19 @@
             </section>
             <section id="vip_kits">
                 <h1 class="title">VIP kits</h1>
-                <form action='https://www.sandbox.paypal.com/cgi-bin/webscr' method="post" name="frmPayPal1">
+                @if (Auth::user())
+                    <a href="{{ route('paypal.express-checkout') }}" class='btn-info btn'>PayPal</a>
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                        <input type="hidden" name="cmd" value="_s-xclick">
+                        <input type="hidden" name="hosted_button_id" value="E8B9AV7TGQJNA">
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                    </form>
 
-                    <input type="hidden" name="business" value="vttodorov94-facilitator@gmail.com">
 
-                    <input type="hidden" name="cmd" value="_xclick">
-
-                    <input type="hidden" name="item_name" value="VIP1">
-
-                    <input type="hidden" name="item_number" value="1">
-
-                    <input type="hidden" name="amount" value="5">
-
-                    <input type="hidden" name="no_shipping" value="1">
-
-                    <input type="hidden" name="currency_code" value="USD">
-
-                    <input type="hidden" name="cancel_return" value="http://kompotrust.eu/payments/cancel">
-
-                    <input type="hidden" name="return" value="http://kompotrust.eu/payments/success">
-
-                    <button  class="add-to-cart">Buy VIP1</button>
-
-                </form>
+                @else
+                    <a href="/signin" class="btn-info btn">Log in</a>
+                @endif
             </section>
     </div>
 

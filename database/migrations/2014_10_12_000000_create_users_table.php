@@ -18,8 +18,8 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('avatar');
             $table->string('username');
-            $table->string('email')->unique();
-            $table->string('steamid')->unique();
+            $table->string('email', 60)->unique();
+            $table->string('steamid', 17)->unique();
             $table->string('password', 60);
             $table->rememberToken();
             $table->timestamps();

@@ -15,7 +15,7 @@ class Website extends BaseController
 
     private $server_id = 1006;
 
-    public function index()
+    public function index(Request $req)
     {
         $json = json_decode(file_get_contents("https://api.rust-servers.info/status/".$this->server_id), true);
         $server_players = $json['players'];

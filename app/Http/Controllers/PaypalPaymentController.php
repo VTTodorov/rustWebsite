@@ -1,127 +1,144 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Srmklive\PayPal\Services\ExpressCheckout;
+use App\Invoice;
 
-use Paypalpayment;
 class PaypalPaymentController extends Controller {
 
-    /*
-    * Process payment using credit card
-    */
-    public function paywithCreditCard()
-    {
-        // ### Address
-        // Base Address object used as shipping or billing
-        // address in a payment. [Optional]
-        // $shippingAddress = Paypalpayment::shippingAddress();
-        // $shippingAddress->setLine1("3909 Witmer Road")
-        //     ->setLine2("Niagara Falls")
-        //     ->setCity("Niagara Falls")
-        //     ->setState("NY")
-        //     ->setPostalCode("14305")
-        //     ->setCountryCode("US")
-        //     ->setPhone("716-298-1822")
-        //     ->setRecipientName("Jhone");
+    protected $provider;
 
-        // ### CreditCard
-        $card = Paypalpayment::creditCard();
-        $card->setType("visa")
-            ->setNumber("4838863451396460")
-            ->setExpireMonth("08")
-            ->setExpireYear("2019")
-            ->setCvv2("257")
-            ->setFirstName("VOLEN")
-            ->setLastName("TODOROV");
-
-        // ### FundingInstrument
-        // A resource representing a Payer's funding instrument.
-        // Use a Payer ID (A unique identifier of the payer generated
-        // and provided by the facilitator. This is required when
-        // creating or using a tokenized funding instrument)
-        // and the `CreditCardDetails`
-        $fi = Paypalpayment::fundingInstrument();
-        $fi->setCreditCard($card);
-
-        // ### Payer
-        // A resource representing a Payer that funds a payment
-        // Use the List of `FundingInstrument` and the Payment Method
-        // as 'credit_card'
-        $payer = Paypalpayment::payer();
-        $payer->setPaymentMethod("credit_card")
-            ->setFundingInstruments([$fi]);
-
-        $item1 = Paypalpayment::item();
-        $item1->setName('Ground Coffee 40 oz')
-                ->setDescription('Ground Coffee 40 oz')
-                ->setCurrency('USD')
-                ->setQuantity(1.00)
-                ->setTax(0.20)
-                ->setPrice(1.00);
-
-
-        $itemList = Paypalpayment::itemList();
-        $itemList->setItems([$item1]);
-            // ->setShippingAddress($shippingAddress);
-
-
-        $details = Paypalpayment::details();
-        $details->setShipping("0.00")
-                ->setTax("0.00")
-                //total of items prices
-                ->setSubtotal("1.20");
-
-        //Payment Amount
-        $amount = Paypalpayment::amount();
-        $amount->setCurrency("USD")
-                // the total is $17.8 = (16 + 0.6) * 1 ( of quantity) + 1.2 ( of Shipping).
-                ->setTotal("1.20")
-                ->setDetails($details);
-
-        // ### Transaction
-        // A transaction defines the contract of a
-        // payment - what is the payment for and who
-        // is fulfilling it. Transaction is created with
-        // a `Payee` and `Amount` types
-
-        $transaction = Paypalpayment::transaction();
-        $transaction->setAmount($amount)
-            ->setItemList($itemList)
-            ->setDescription("Payment test")
-            ->setInvoiceNumber(uniqid());
-
-        // ### Payment
-        // A Payment Resource; create one using
-        // the above types and intent as 'sale'
-
-        $payment = Paypalpayment::payment();
-
-        $payment->setIntent("sale")
-            ->setPayer($payer)
-            ->setTransactions([$transaction]);
-
-        // try {
-        //     // ### Create Payment
-        //     // Create a payment by posting to the APIService
-        //     // using a valid ApiContext
-        //     // The return object contains the status;
-        //     $payment->create(Paypalpayment::apiContext());
-        // } catch (\PPConnectionException $ex) {
-        //     return response()->json(["error" => $ex->getMessage()], 400);
-        // }
-
-        try {
-            $payment->create(Paypalpayment::apiContext('Ad5RiMWicwk216caOKzyebHmWNlnrJ1jFPhfWTXegflQpTNdJIO9ywdP4EMkhrgIU1NYc5vdH3S2YkW-','EHC03gZUL-XjXqQVhcYxCXh_-cDuEA4oEeSLNEingCE8bOgyOGL7ijtpkfDhTqYBzdoGDvW8DFvFpgYp'));
-        } catch (PayPal\Exception\PayPalConnectionException $ex) {
-            echo $ex->getCode(); // Prints the Error Code
-            echo $ex->getData(); // Prints the detailed error message
-            die($ex);
-        } catch (Exception $ex) {
-            die($ex);
-        }
-
-        return response()->json([$payment->toArray()], 200);
+    public function __construct() {
+        $this->provider = new ExpressCheckout();
     }
 
+    public function expressCheckout(Request $request) {
+        // check if payment is recurring
+        $recurring = $request->input('recurring', false) ? true : false;
+        // get new invoice id
+        $invoice_id = Invoice::count() + 1;
+
+        // Get the cart data
+        $cart = $this->getItems($recurring, $invoice_id);
+
+        // create new invoice
+        $invoice = new Invoice();
+        $invoice->title = $cart['invoice_description'];
+        $invoice->price = $cart['total'];
+        $invoice->steamid = Auth::user()->steamid;
+        $invoice->save();
+
+        // send a request to paypal
+        // paypal should respond with an array of data
+        // the array should contain a link to paypal's payment system
+        $response = $this->provider->setExpressCheckout($cart, $recurring);
+
+        // if there is no link redirect back with error message
+        if (!$response['paypal_link']) {
+            return redirect('/')->with(['code' => 'danger', 'message' => 'Something went wrong with PayPal']);
+        // For the actual error message dump out $response and see what's in there
+        }
+
+        // redirect to paypal
+        // after payment is done paypal
+        // will redirect us back to $this->expressCheckoutSuccess
+        return redirect($response['paypal_link']);
+    }
+
+    private function getItems($recurring, $invoice_id)
+    {
+        return [
+            'items' => [
+                [
+                    'name' => 'VIP kit',
+                    'price' => 5,
+                    'qty' => 1,
+                ]
+            ],
+
+            'return_url' => url('/paypal/express-checkout-success'),
+            'invoice_id' => config('paypal.invoice_prefix') . '_' . $invoice_id,
+            'invoice_description' => "Order #" . $invoice_id . " Invoice",
+            'cancel_url' => url('/'),
+            'total' => 5,
+        ];
+    }
+
+    public function expressCheckoutSuccess(Request $request) {
+
+        // check if payment is recurring
+        $recurring = $request->input('recurring', false) ? true : false;
+
+        $token = $request->get('token');
+
+        $PayerID = $request->get('PayerID');
+
+        // initaly we paypal redirects us back with a token
+        // but doesn't provice us any additional data
+        // so we use getExpressCheckoutDetails($token)
+        // to get the payment details
+        $response = $this->provider->getExpressCheckoutDetails($token);
+
+        // if response ACK value is not SUCCESS or SUCCESSWITHWARNING
+        // we return back with error
+        if (!in_array(strtoupper($response['ACK']), ['SUCCESS', 'SUCCESSWITHWARNING'])) {
+            return redirect('/')->with(['code' => 'danger', 'message' => 'Error processing PayPal payment']);
+        }
+
+        // invoice id is stored in INVNUM
+        // because we set our invoice to be xxxx_id
+        // we need to explode the string and get the second element of array
+        // witch will be the id of the invoice
+        $invoice_id = explode('_', $response['INVNUM'])[1];
+
+        // get cart data
+        $cart = $this->getItems($recurring, $invoice_id);
+
+        // check if our payment is recurring
+        if ($recurring === true) {
+
+            // if recurring then we need to create the subscription
+            // you can create monthly or yearly subscriptions
+            $response = $this->provider->createMonthlySubscription($response['TOKEN'], $response['AMT'], $cart['subscription_desc']);
+
+            $status = 'Invalid';
+            // if after creating the subscription paypal responds with activeprofile or pendingprofile
+            // we are good to go and we can set the status to Processed, else status stays Invalid
+            if (!empty($response['PROFILESTATUS']) && in_array($response['PROFILESTATUS'], ['ActiveProfile', 'PendingProfile'])) {
+                $status = 'Processed';
+            }
+
+        } else {
+
+            // if payment is not recurring just perform transaction on PayPal
+            // and get the payment status
+            $payment_status = $this->provider->doExpressCheckoutPayment($cart, $token, $PayerID);
+            $status = $payment_status['PAYMENTINFO_0_PAYMENTSTATUS'];
+
+        }
+
+        // find invoice by id
+        $invoice = Invoice::find($invoice_id);
+
+        // set invoice status
+        $invoice->payment_status = $status;
+
+        // if payment is recurring lets set a recurring id for latter use
+        if ($recurring === true) {
+            $invoice->recurring_id = $response['PROFILEID'];
+        }
+
+        // save the invoice
+        $invoice->save();
+
+        // App\Invoice has a paid attribute that returns true or false based on payment status
+        // so if paid is false return with error, else return with success message
+        if ($invoice->paid) {
+            return redirect('/')->with(['code' => 'success', 'message' => 'Order ' . $invoice->id . ' has been paid successfully!']);
+        }
+
+        return redirect('/')->with(['code' => 'danger', 'message' => 'Error processing PayPal payment for Order ' . $invoice->id . '!']);
+    }
 }

@@ -20,7 +20,9 @@ Route::get('/steam', 'AuthController@handle');
 Route::get('/signin', 'AuthController@redirectToSteam');
 
 Route::get('/payments/success', 'Website@success');
-
+Route::get('paypal/express-checkout', 'PaypalPaymentController@expressCheckout')->name('paypal.express-checkout');
+Route::get('paypal/express-checkout-success', 'PaypalPaymentController@expressCheckoutSuccess');
+Route::post('paypal/notify', 'PaypalPaymentController@notify');
 
 Route::get('/payments', function()
 {
