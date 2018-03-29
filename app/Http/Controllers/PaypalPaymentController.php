@@ -53,7 +53,7 @@ class PaypalPaymentController extends Controller {
             'items' => [
                 [
                     'name' => 'VIP kit',
-                    'price' => 5,
+                    'price' => 1,
                     'qty' => 1,
                 ]
             ],
