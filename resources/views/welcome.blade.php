@@ -303,19 +303,11 @@
             </section>
             <section id="vip_kits">
                 <h1 class="title">VIP kits</h1>
-                @if (Auth::user())
+                <!-- @if (Auth::user()) -->
                     <a href="{{ route('paypal.express-checkout') }}" class='btn-info btn'>PayPal</a>
-                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                        <input type="hidden" name="cmd" value="_s-xclick">
-                        <input type="hidden" name="hosted_button_id" value="E8B9AV7TGQJNA">
-                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-                    </form>
-
-
-                @else
-                    <a href="/signin" class="btn-info btn">Log in</a>
-                @endif
+                <!-- @else -->
+                    <!-- <a href="/signin" class="btn-info btn">Log in</a> -->
+                <!-- @endif -->
             </section>
     </div>
 

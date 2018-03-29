@@ -27,7 +27,7 @@ class PaypalPaymentController extends Controller {
         $invoice = new Invoice();
         $invoice->title = $cart['invoice_description'];
         $invoice->price = $cart['total'];
-        $invoice->steamid = Auth::user()->steamid;
+        $invoice->steamid = "123456789";
         $invoice->save();
 
         // send a request to paypal
