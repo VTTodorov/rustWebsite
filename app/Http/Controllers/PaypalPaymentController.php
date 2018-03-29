@@ -62,7 +62,7 @@ class PaypalPaymentController extends Controller {
             'invoice_id' => config('paypal.invoice_prefix') . '_' . $invoice_id,
             'invoice_description' => "Order #" . $invoice_id . " Invoice",
             'cancel_url' => url('/'),
-            'total' => 5,
+            'total' => 1,
         ];
     }
 
